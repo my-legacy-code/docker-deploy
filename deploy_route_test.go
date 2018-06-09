@@ -8,7 +8,6 @@ import (
 	"encoding/json"
 	"bytes"
 	"net/http"
-	"os"
 )
 
 func setupDeployRoute(t *testing.T) (*gin.Engine, *httptest.ResponseRecorder, DockerHubWebHookPayload) {

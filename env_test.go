@@ -7,7 +7,7 @@ import (
 )
 
 func Test_getEnv(t *testing.T) {
-	assert.Equal(t,"defaultKey", getEnv("KEY", "defaultKey"))
+	assert.Equal(t, "defaultKey", getEnv("KEY", "defaultKey"))
 	os.Setenv("KEY", "newKey")
 	assert.Equal(t, "newKey", getEnv("KEY", "defaultKey"))
 }

@@ -45,7 +45,6 @@ func loadDockerHubPayload(mockPayloadFilename string) (DockerHubWebHookPayload, 
 		return *payload, errors.WithStack(err)
 	}
 
-
 	err = json.Unmarshal(b, payload)
 
 	if err != nil {

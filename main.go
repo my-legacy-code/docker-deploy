@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func setupRouter(serviceStates serviceStates) *gin.Engine{
+func setupRouter(serviceStates serviceStates) *gin.Engine {
 	router := gin.Default()
 	router.Static("/assets", "./public")
 	router.LoadHTMLGlob("views/*.html")

@@ -19,7 +19,7 @@ func pullDockerImage(imageName string) error {
 
 func runDockerContainer(imageName string, runArgs ...string) error {
 
-	args := []string {"run", "-d"}
+	args := []string{"run", "-d"}
 	args = append(args, runArgs...)
 	args = append(args, imageName)
 
@@ -47,7 +47,6 @@ func getContainerIds(imageName string) ([]string, error) {
 
 func removeDockerContainers(imageName string) error {
 	const acceptableError = "exit status 1"
-
 
 	containerIds, err := getContainerIds(imageName)
 
