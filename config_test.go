@@ -1,0 +1,14 @@
+package main
+
+import (
+	"testing"
+	"github.com/stretchr/testify/assert"
+	"fmt"
+)
+
+func Test_loadConfig(t *testing.T) {
+	testConfigs, err := loadConfig("testdata/config_test.json")
+	assert.Nil(t, err)
+	assert.IsType(t, configs{}, testConfigs)
+	fmt.Println("configs", testConfigs)
+}
