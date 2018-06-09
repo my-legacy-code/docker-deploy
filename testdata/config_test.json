@@ -1,0 +1,12 @@
+{
+  "teamyapp/teamy_api": {
+    "name": "teamy_api",
+    "namespace": "teamyapp",
+    "docker_run_args": ["-p", "8001:3000"]
+  },
+  "rivalry-game/frontend": {
+    "name": "frontend",
+    "namespace": "rivalry-game",
+    "docker_run_args": ["-p", "8002:3000"]
+  }
+}
