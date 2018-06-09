@@ -1,0 +1,43 @@
+.logo {
+    display: flex;
+    justify-content: center;
+    font-size: 16px;
+    line-height:40px;
+    color: white;
+    font-weight: bold;
+}
+.status {
+    padding: 4px 10px;
+    color: white;
+    font-weight: bolder;
+}
+
+.status-0 {
+    /* Running */
+    background-color: #4CAF50;
+}
+
+.status-0:after {
+    content: 'Running';
+
+}
+
+.status-1 {
+    /* Deploying */
+    background-color: #03A9F4;
+}
+
+.status-1:after {
+    content: 'Deploying';
+
+}
+
+.status-2 {
+    /* Stopped */
+    background-color: #616161;
+}
+
+.status-2:after {
+    content: 'Stopped';
+
+}
