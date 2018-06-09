@@ -13,32 +13,29 @@
     font-weight: bolder;
 }
 
-.status-0 {
-    /* Running */
+.status-running {
     background-color: #4CAF50;
 }
 
-.status-0:after {
+.status-running:after {
     content: 'Running';
 
 }
 
-.status-1 {
-    /* Deploying */
+.status-deploying {
     background-color: #03A9F4;
 }
 
-.status-1:after {
+.status-deploying:after {
     content: 'Deploying';
 
 }
 
-.status-2 {
-    /* Stopped */
+.status-stopped {
     background-color: #616161;
 }
 
-.status-2:after {
+.status-stopped:after {
     content: 'Stopped';
 
 }
