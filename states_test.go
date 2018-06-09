@@ -22,7 +22,7 @@ func Test_initServiceState(t *testing.T) {
 	testServiceStatus := initServiceState(testConfigs)
 	assert.Equal(t,
 		serviceStates{
-			"org1/app1": Service{
+			"org1/app1": &Service{
 				Status: Initialized,
 				ServiceConfig: ServiceConfig{
 					Name:          "app1",
@@ -30,7 +30,7 @@ func Test_initServiceState(t *testing.T) {
 					DockerRunArgs: []string{"arg1", "arg2"},
 				},
 			},
-			"org2/app2": Service{
+			"org2/app2": &Service{
 				Status: Initialized,
 				ServiceConfig: ServiceConfig{
 					Name:          "app2",

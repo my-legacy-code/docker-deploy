@@ -1,0 +1,26 @@
+{
+  "push_data": {
+    "pushed_at": 1528486026,
+    "images": [
+    ],
+    "tag": "latest",
+    "pusher": "teamyapp"
+  },
+  "callback_url": "https://registry.hub.docker.com/u/teamyapp/teamy_api/hook/22g0ag1d5if044a3edbi10c2if35adi0a/",
+  "repository": {
+    "status": "Active",
+    "description": "Backend for Teamy, an effective task manager for start-ups and small companies.",
+    "is_trusted": false,
+    "full_description": null,
+    "repo_url": "https://hub.docker.com/r/teamyapp/teamy_api",
+    "owner": "teamyapp",
+    "is_official": false,
+    "is_private": false,
+    "name": "teamy_api",
+    "namespace": "teamyapp",
+    "star_count": 0,
+    "comment_count": 0,
+    "date_created": 1528357169,
+    "repo_name": "teamyapp/teamy_api"
+  }
+}

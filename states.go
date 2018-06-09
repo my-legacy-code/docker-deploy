@@ -9,14 +9,14 @@ const (
 
 type Status string
 
-type serviceStates map[string]Service
+type serviceStates map[string]*Service
 
 func initServiceState(configs configs) serviceStates {
 
 	serviceStates := make(serviceStates)
 
 	for k, v := range configs {
-		serviceStates[k] = Service{
+		serviceStates[k] = &Service{
 			Status:        Initialized,
 			ServiceConfig: v,
 		}
