@@ -42,7 +42,7 @@
         {{range .services}}
         <tr>
             <td>
-            {{.Name}}
+            {{.ServiceConfig.Name}}
             </td>
             <td>
                 <div class="status status-{{.Status}}">
@@ -52,12 +52,12 @@
             {{.DeployedAt}}
             </td>
             <td>
-                <a href="https://hub.docker.com/r/{{.Namespace}}">
-                {{.Namespace}}
+                <a href="https://hub.docker.com/r/{{.ServiceConfig.Namespace}}">
+                {{.ServiceConfig.Namespace}}
                 </a>
                 /
-                <a href="https://hub.docker.com/r/{{.Namespace}}/{{.RepoName}}">
-                {{.RepoName}}
+                <a href="https://hub.docker.com/r/{{.ServiceConfig.Namespace}}/{{.ServiceConfig.Name}}">
+                {{.ServiceConfig.Name}}
                 </a>
             </td>
         </tr>

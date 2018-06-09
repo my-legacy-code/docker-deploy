@@ -1,11 +1,10 @@
 package main
 
 import (
-	"net/http"
-	"github.com/gin-gonic/gin"
-	"time"
+	"os"
 	"fmt"
-	"os/exec"
+	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 type WebHookPayload struct {
@@ -39,118 +38,85 @@ type Repository struct {
 	Status          string  `json:"status"`
 }
 
-type Service struct {
-	Name        string
-	Status      Status
-	RepoName    string
-	Namespace   string
-	ContainerId string
-	RunOptions  string
-	CMD         string
-	DeployedAt  time.Time
+func getEnv(key, defaultVal string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		return defaultVal
+	}
+	return value
 }
 
-type Status int
-
-const (
-	Running   Status = iota
-	Deploying
-	Stopped
-)
-
 func main() {
-	services := map[string]*Service{
-		"teamyapp/teamy_api": {
-			"Teamy API",
-			Stopped,
-			"teamy_api",
-			"teamyapp",
-			"952a74e8d3fe",
-			"-p 8081:8080",
-			"",
-			time.Now(),
-		},
-		"teamyapp/teamy_frontend": {
-			"Teamy Web Frontend",
-			Stopped,
-			"teamy_frontend",
-			"teamyapp",
-			"",
-			"",
-			"",
-			time.Now(),
-		},
-		"rivalrygame/rivalrygame_frontend": {
-			"Rivalry Game Frontend",
-			Stopped,
-			"rivalrygame_frontend",
-			"rivalrygame",
-			"",
-			"",
-			"",
-			time.Now(),
-		},
+
+	configFilename := os.Args[1]
+	serviceConfig, err := loadConfig(configFilename)
+
+	if err != nil {
+		fmt.Printf("Cannot read config file %s\n", configFilename)
+		os.Exit(1)
 	}
+
+	serviceState := initServiceState(serviceConfig)
 
 	router := gin.Default()
 	router.Static("/assets", "./public")
 	router.LoadHTMLGlob("views/*.html")
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.HTML(http.StatusOK, "services.html", gin.H{
-			"services": services,
+			"services": serviceState,
 		})
 	})
 
-	router.POST("/deploy", func(ctx *gin.Context) {
-		var payload WebHookPayload
-		err := ctx.BindJSON(&payload)
-		if err != nil {
-			ctx.AbortWithError(400, err)
-			return
-		}
-
-		if service, ok := services[payload.Repository.RepoName]; ok {
-			fmt.Printf("[DOCKER DEPLOY] Start deploying %v\n", payload.Repository.RepoName)
-			services[payload.Repository.RepoName].Status = Deploying
-
-			fmt.Printf("[DOCKER DEPLOY] Pulling %v:latest from Docker Hub\n", payload.Repository.RepoName)
-
-			imageName := payload.Repository.RepoName + ":latest"
-
-			cmd := exec.Command("docker", "pull", imageName)
-
-			err := cmd.Run()
-
-			if err != nil {
-				ctx.Writer.WriteHeader(http.StatusInternalServerError)
-				return
-			}
-
-			if service.ContainerId != "" {
-				fmt.Printf("[DOCKER DEPLOY] Stopping container %v\n", service.ContainerId)
-				cmd = exec.Command("docker", "stop", service.ContainerId)
-				cmd.Run()
-
-				fmt.Printf("[DOCKER DEPLOY] Removing container %v\n", service.ContainerId)
-				cmd = exec.Command("docker", "rm", service.ContainerId)
-				cmd.Run()
-			}
-
-			fmt.Printf("[DOCKER DEPLOY] Running a new contrainer for %v\n", imageName)
-			cmd = exec.Command("docker", "run", "-id", service.ContainerId)
-			containerId, _ := cmd.CombinedOutput()
-			services[payload.Repository.RepoName].ContainerId = string(containerId)
-
-			if service.CMD != "" {
-				fmt.Printf("[DOCKER DEPLOY] Running %v inside container\n", service.ContainerId)
-			}
-
-			ctx.Writer.WriteHeader(http.StatusNoContent)
-			return
-		}
-
-		fmt.Printf("[DOCKER DEPLOY] No configuration for %v\n", payload.Repository.RepoName)
-		ctx.Writer.WriteHeader(http.StatusBadRequest)
-	})
-	router.Run(":8080")
+	//router.POST("/deploy", func(ctx *gin.Context) {
+	//	var payload WebHookPayload
+	//	err := ctx.BindJSON(&payload)
+	//	if err != nil {
+	//		ctx.AbortWithError(http.StatusBadRequest, err)
+	//		return
+	//	}
+	//
+	//	if service, ok := services[payload.Repository.RepoName]; ok {
+	//		fmt.Printf("[DOCKER DEPLOY] Start deploying %v\n", payload.Repository.RepoName)
+	//		services[payload.Repository.RepoName].Status = Deploying
+	//
+	//		fmt.Printf("[DOCKER DEPLOY] Pulling %v:latest from Docker Hub\n", payload.Repository.RepoName)
+	//
+	//		imageName := payload.Repository.RepoName + ":latest"
+	//
+	//		cmd := exec.Command("docker", "pull", imageName)
+	//
+	//		err := cmd.Run()
+	//
+	//		if err != nil {
+	//			ctx.Writer.WriteHeader(http.StatusInternalServerError)
+	//			return
+	//		}
+	//
+	//		if service.ContainerId != "" {
+	//			fmt.Printf("[DOCKER DEPLOY] Stopping container %v\n", service.ContainerId)
+	//			cmd = exec.Command("docker", "stop", service.ContainerId)
+	//			cmd.Run()
+	//
+	//			fmt.Printf("[DOCKER DEPLOY] Removing container %v\n", service.ContainerId)
+	//			cmd = exec.Command("docker", "rm", service.ContainerId)
+	//			cmd.Run()
+	//		}
+	//
+	//		fmt.Printf("[DOCKER DEPLOY] Running a new contrainer for %v\n", imageName)
+	//		cmd = exec.Command("docker", "run", "-id", service.ContainerId)
+	//		containerId, _ := cmd.CombinedOutput()
+	//		services[payload.Repository.RepoName].ContainerId = string(containerId)
+	//
+	//		if service.CMD != "" {
+	//			fmt.Printf("[DOCKER DEPLOY] Running %v inside container\n", service.ContainerId)
+	//		}
+	//
+	//		ctx.Writer.WriteHeader(http.StatusNoContent)
+	//		return
+	//	}
+	//
+	//	fmt.Printf("[DOCKER DEPLOY] No configuration for %v\n", payload.Repository.RepoName)
+	//	ctx.Writer.WriteHeader(http.StatusBadRequest)
+	//})
+	router.Run(":" + getEnv("PORT", "3000"))
 }

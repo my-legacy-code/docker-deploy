@@ -13,6 +13,15 @@
     font-weight: bolder;
 }
 
+.status-initialized{
+    background-color: #607D8B;
+}
+
+.status-initialized:after {
+    content: 'Initialized';
+
+}
+
 .status-running {
     background-color: #4CAF50;
 }
