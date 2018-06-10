@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"fmt"
+	"time"
 )
 
 func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
@@ -42,6 +43,7 @@ func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 				return
 			}
 
+			serviceStates[payload.Repository.RepoName].DeployedAt = time.Now()
 			serviceStates[payload.Repository.RepoName].Status = Running
 			log(fmt.Sprintf("Container for %s is now up and running", imageName))
 			ctx.Writer.WriteHeader(http.StatusNoContent)
