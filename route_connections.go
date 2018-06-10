@@ -7,7 +7,7 @@ import (
 )
 
 type Client struct {
-	connection *websocket.Conn
+	Conn *websocket.Conn
 }
 
 func newConnectionHandler(appState *AppState) gin.HandlerFunc {
@@ -18,7 +18,7 @@ func newConnectionHandler(appState *AppState) gin.HandlerFunc {
 
 	return func(ctx *gin.Context) {
 		userId := ctx.Param("user_id")
-		connection, err := wsUpgrader.Upgrade(ctx.Writer, ctx.Request, nil)
+		conn, err := wsUpgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 
 		if err != nil {
 			fmt.Println(err)
@@ -27,8 +27,10 @@ func newConnectionHandler(appState *AppState) gin.HandlerFunc {
 		}
 
 		client := Client{
-			connection: connection,
+			Conn: conn,
 		}
 		appState.Clients[userId] = client
+
+		sendInitialServiceStates(userId, appState)
 	}
 }

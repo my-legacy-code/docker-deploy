@@ -4,19 +4,15 @@ import (
 	"os"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"net/http"
+	"github.com/gin-contrib/static"
 )
 
 func setupRouter(appState *AppState) *gin.Engine {
 	router := gin.Default()
-	router.Static("/assets", "./public")
-	router.LoadHTMLGlob("views/*.html")
-	router.GET("/", func(ctx *gin.Context) {
-		ctx.HTML(http.StatusOK, "services.html", gin.H{
-			"services": appState.ServiceStates,
-		})
-	})
-	router.GET("/api/connections/:user_id", newConnectionHandler(appState))
+
+	router.Use(static.Serve("/", static.LocalFile("./public", true)))
+	apiRoutes := router.Group("/api")
+	apiRoutes.GET("/connections/:user_id", newConnectionHandler(appState))
 	router.POST("/deploy", deployHandler(appState))
 	return router
 }
