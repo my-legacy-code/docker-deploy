@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
+func deployHandler(appState *AppState) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var payload DockerHubWebHookPayload
 		err := ctx.BindJSON(&payload)
@@ -16,9 +16,9 @@ func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 			return
 		}
 
-		if service, ok := serviceStates[payload.Repository.RepoName]; ok {
+		if service, ok := appState.ServiceStates[payload.Repository.RepoName]; ok {
 			log(fmt.Sprintf("Start deploying %v", payload.Repository.RepoName))
-			serviceStates[payload.Repository.RepoName].Status = Deploying
+			appState.ServiceStates[payload.Repository.RepoName].Status = Deploying
 
 			log(fmt.Sprintf("Pulling %v:latest from Docker Hub", payload.Repository.RepoName))
 
@@ -43,8 +43,8 @@ func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 				return
 			}
 
-			serviceStates[payload.Repository.RepoName].DeployedAt = time.Now()
-			serviceStates[payload.Repository.RepoName].Status = Running
+			appState.ServiceStates[payload.Repository.RepoName].DeployedAt = time.Now()
+			appState.ServiceStates[payload.Repository.RepoName].Status = Running
 			log(fmt.Sprintf("Container for %s is now up and running", imageName))
 			ctx.Writer.WriteHeader(http.StatusNoContent)
 			return

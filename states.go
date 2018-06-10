@@ -9,11 +9,20 @@ const (
 
 type Status string
 
-type serviceStates map[string]*Service
+type AppState struct {
+	ServiceStates ServiceStates
+}
 
-func initServiceState(configs configs) serviceStates {
+type ServiceStates map[string]*Service
 
-	serviceStates := make(serviceStates)
+func initAppState(serviceConfig configs) *AppState {
+	appState := new(AppState)
+	appState.ServiceStates = initServiceState(serviceConfig)
+	return appState
+}
+
+func initServiceState(configs configs) ServiceStates {
+	serviceStates := make(ServiceStates)
 
 	for k, v := range configs {
 		serviceStates[k] = &Service{

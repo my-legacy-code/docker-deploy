@@ -7,16 +7,17 @@ import (
 	"net/http"
 )
 
-func setupRouter(serviceStates serviceStates) *gin.Engine {
+func setupRouter(appState *AppState) *gin.Engine {
 	router := gin.Default()
 	router.Static("/assets", "./public")
 	router.LoadHTMLGlob("views/*.html")
 	router.GET("/", func(ctx *gin.Context) {
 		ctx.HTML(http.StatusOK, "services.html", gin.H{
-			"services": serviceStates,
+			"services": appState.ServiceStates,
 		})
 	})
-	router.POST("/deploy", deployHandler(serviceStates))
+	router.GET("/api/real-time-channel", realTimeChannelHandler(appState))
+	router.POST("/deploy", deployHandler(appState))
 	return router
 }
 
@@ -30,8 +31,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	serviceStates := initServiceState(serviceConfig)
-
-	router := setupRouter(serviceStates)
+	appState := initAppState(serviceConfig)
+	router := setupRouter(appState)
 	router.Run(":" + getEnv("PORT", "3000"))
 }
