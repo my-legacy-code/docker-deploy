@@ -3,10 +3,11 @@ window.onload = () => {
     let webSocket = new WebSocket(`ws://192.168.1.23:8080/api/connections/${username}`);
 
     webSocket.addEventListener('open', event => {
-        console.log('Hello, server!');
+        console.log('Established WebSocket connection.');
     });
 
     webSocket.addEventListener('message', event => {
-        console.log(`message from server ${event.data}`);
+        let message = JSON.parse(event.data);
+        console.log(message);
     });
 };
