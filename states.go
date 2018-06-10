@@ -11,6 +11,7 @@ type Status string
 
 type AppState struct {
 	ServiceStates ServiceStates
+	Clients map[string] Client
 }
 
 type ServiceStates map[string]*Service
@@ -18,6 +19,7 @@ type ServiceStates map[string]*Service
 func initAppState(serviceConfig configs) *AppState {
 	appState := new(AppState)
 	appState.ServiceStates = initServiceState(serviceConfig)
+	appState.Clients = make(map[string]Client)
 	return appState
 }
 

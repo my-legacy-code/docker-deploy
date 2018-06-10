@@ -16,7 +16,7 @@ func setupRouter(appState *AppState) *gin.Engine {
 			"services": appState.ServiceStates,
 		})
 	})
-	router.GET("/api/real-time-channel", realTimeChannelHandler(appState))
+	router.GET("/api/connections/:user_id", newConnectionHandler(appState))
 	router.POST("/deploy", deployHandler(appState))
 	return router
 }
