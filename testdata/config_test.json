@@ -4,9 +4,9 @@
     "namespace": "teamyapp",
     "docker_run_args": ["-p", "8001:3000"]
   },
-  "rivalry-game/frontend": {
+  "rivalrygame/frontend": {
     "name": "frontend",
-    "namespace": "rivalry-game",
+    "namespace": "rivalrygame",
     "docker_run_args": ["-p", "8002:3000"]
   }
 }

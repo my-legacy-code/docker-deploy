@@ -28,10 +28,10 @@ func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 				return
 			}
 
-			log(fmt.Sprintf("Removing exisiting containers for %s", imageName))
-			err := removeDockerContainers(imageName)
+			log(fmt.Sprintf("Removing exisiting containers for %s", payload.Repository.RepoName))
+			err := removeDockerContainers(payload.Repository.RepoName)
 			if err != nil {
-				ctx.String(http.StatusInternalServerError, "Fail to remove docker containers for %s\n", imageName)
+				ctx.String(http.StatusInternalServerError, "Fail to remove docker containers for %s\n", payload.Repository.RepoName)
 				return
 			}
 
@@ -42,6 +42,8 @@ func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 				return
 			}
 
+			serviceStates[payload.Repository.RepoName].Status = Running
+			log(fmt.Sprintf("Container for %s is now up and running", imageName))
 			ctx.Writer.WriteHeader(http.StatusNoContent)
 			return
 		}
