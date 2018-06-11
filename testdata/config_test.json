@@ -7,6 +7,6 @@
   "rivalrygame/frontend": {
     "name": "frontend",
     "namespace": "rivalrygame",
-    "docker_run_args": ["-p", "8002:3000"]
+    "docker_run_args": ["-p", "8002:80"]
   }
 }
