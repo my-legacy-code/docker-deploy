@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"log"
 )
 
-func setupRouter(serviceStates serviceStates) *gin.Engine {
+func setupRouter(serviceStates serviceStates, errLogger *log.Logger) *gin.Engine {
 	router := gin.Default()
 	router.Static("/assets", "./public")
 	router.LoadHTMLGlob("views/*.html")
@@ -16,11 +17,14 @@ func setupRouter(serviceStates serviceStates) *gin.Engine {
 			"services": serviceStates,
 		})
 	})
-	router.POST("/deploy", deployHandler(serviceStates))
+	router.POST("/deploy", deployHandler(serviceStates, errLogger))
 	return router
 }
 
 func main() {
+
+	setupLogger()
+	errLogger := makeErrLogger()
 
 	configFilename := os.Args[1]
 	serviceConfig, err := loadConfig(configFilename)
@@ -32,6 +36,6 @@ func main() {
 
 	serviceStates := initServiceState(serviceConfig)
 
-	router := setupRouter(serviceStates)
+	router := setupRouter(serviceStates, errLogger)
 	router.Run(":" + getEnv("PORT", "3000"))
 }
