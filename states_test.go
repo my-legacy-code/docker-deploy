@@ -21,7 +21,7 @@ func Test_initServiceState(t *testing.T) {
 
 	testServiceStatus := initServiceState(testConfigs)
 	assert.Equal(t,
-		serviceStates{
+		ServiceStates{
 			"org1/app1": &Service{
 				Status: Initialized,
 				ServiceConfig: ServiceConfig{

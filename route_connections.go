@@ -4,13 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"fmt"
+	"log"
 )
 
 type Client struct {
 	Conn *websocket.Conn
 }
 
-func newConnectionHandler(appState *AppState) gin.HandlerFunc {
+func newConnectionHandler(appState *AppState, errLogger *log.Logger) gin.HandlerFunc {
 	wsUpgrader := websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
@@ -22,7 +23,7 @@ func newConnectionHandler(appState *AppState) gin.HandlerFunc {
 
 		if err != nil {
 			fmt.Println(err)
-			log(fmt.Sprintf("Fail to establish WebSocket connection with %s", userId))
+			errLogger.Printf("Fail to establish WebSocket connection with %s", userId)
 			return
 		}
 

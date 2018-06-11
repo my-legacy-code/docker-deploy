@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"log"
+)
 
 const (
 	Running     Status = "running"
@@ -13,7 +15,7 @@ type Status string
 
 type AppState struct {
 	ServiceStates ServiceStates
-	Clients map[string] Client
+	Clients       map[string]Client
 }
 
 type ServiceStates map[string]*Service
@@ -40,33 +42,31 @@ func initServiceState(configs configs) ServiceStates {
 
 const (
 	InitialServiceStates WSMessageType = "initial_service_states"
-	UpdateServiceState WSMessageType = "update_service_state"
-)  
+	UpdateServiceState   WSMessageType = "update_service_state"
+)
 
 type WSMessageType string
 
 type WSMessage struct {
 	Type WSMessageType `json:"type"`
-	Body interface{} `json:"body"`
+	Body interface{}   `json:"body"`
 }
 
-func sendInitialServiceStates(username string, appState *AppState)  {
+func sendInitialServiceStates(username string, appState *AppState) {
 	message := WSMessage{
 		Type: InitialServiceStates,
 		Body: appState.ServiceStates,
-
 	}
 	appState.Clients[username].Conn.WriteJSON(message)
 }
 
-func updateServiceState(service *Service, appState *AppState)  {
+func updateServiceState(service *Service, appState *AppState) {
 	message := WSMessage{
 		Type: UpdateServiceState,
 		Body: service,
-		
 	}
 	for username, client := range appState.Clients {
-		log(fmt.Sprintf("Pushing new service state to %s", username))
+		log.Printf("Pushing new service state to %s", username)
 		client.Conn.WriteJSON(message)
 	}
 }

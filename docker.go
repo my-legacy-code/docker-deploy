@@ -34,7 +34,7 @@ func getContainerIds(imageName string) ([]string, error) {
 	cmd := exec.Command("docker", args...)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return nil, errors.Wrapf(cmd.Run(), "getContainerIds(%s) failed", imageName)
+		return nil, errors.Wrapf(err, "getContainerIds(%s) failed : %s", imageName, output)
 	}
 
 	containerIdStr := string(output)

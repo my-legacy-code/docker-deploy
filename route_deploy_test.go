@@ -16,8 +16,10 @@ func setupDeployRoute(t *testing.T) (*gin.Engine, *httptest.ResponseRecorder, Do
 	serviceConfig, err := loadConfig(configFilename)
 	assert.Nil(t, err)
 
-	serviceStates := initServiceState(serviceConfig)
-	router := setupRouter(serviceStates)
+	setupLogger()
+	errLogger := makeErrLogger()
+	appState := initAppState(serviceConfig)
+	router := setupRouter(appState, errLogger)
 
 	recorder := httptest.NewRecorder()
 
@@ -33,7 +35,7 @@ func TestDeployService(t *testing.T) {
 	b, err := json.Marshal(payload)
 	assert.Nil(t, err)
 
-	req, _ := http.NewRequest("POST", "/deploy", bytes.NewReader(b))
+	req, _ := http.NewRequest("POST", "/api/deploy", bytes.NewReader(b))
 	router.ServeHTTP(recorder, req)
 
 	assert.Equal(t, http.StatusNoContent, recorder.Code)
