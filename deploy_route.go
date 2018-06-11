@@ -5,12 +5,25 @@ import (
 	"net/http"
 	"fmt"
 	"time"
+	"io/ioutil"
+	"github.com/segmentio/objconv/json"
 )
 
 func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+
+		b, err := ioutil.ReadAll(ctx.Request.Body)
+		fmt.Println(err)
+		fmt.Println("----------------------")
+		fmt.Println(string(b))
+		fmt.Println("----------------------")
+
+
 		var payload DockerHubWebHookPayload
-		err := ctx.BindJSON(&payload)
+
+		err = json.Unmarshal(b, &payload)
+
+		//err = ctx.BindJSON(&payload)
 		if err != nil {
 			ctx.AbortWithError(http.StatusBadRequest, err)
 			return
@@ -23,22 +36,25 @@ func deployHandler(serviceStates serviceStates) gin.HandlerFunc {
 			log(fmt.Sprintf("Pulling %v:latest from Docker Hub", payload.Repository.RepoName))
 
 			imageName := latestImageName(payload.Repository.RepoName)
-			err = pullDockerImage(imageName)
+			log(fmt.Sprintf("Removing exisiting containers for %s", imageName))
+			err := removeDockerContainers(imageName)
 			if err != nil {
-				ctx.String(http.StatusInternalServerError, "Fail to pull %s\n", imageName)
+				fmt.Printf("%+v\n", err)
+				ctx.String(http.StatusInternalServerError, "Fail to remove docker containers for %s\n", imageName)
 				return
 			}
 
-			log(fmt.Sprintf("Removing exisiting containers for %s", payload.Repository.RepoName))
-			err := removeDockerContainers(payload.Repository.RepoName)
+			err = pullDockerImage(imageName)
 			if err != nil {
-				ctx.String(http.StatusInternalServerError, "Fail to remove docker containers for %s\n", payload.Repository.RepoName)
+				fmt.Printf("%+v\n", err)
+				ctx.String(http.StatusInternalServerError, "Fail to pull %s\n", imageName)
 				return
 			}
 
 			log(fmt.Sprintf("Launching a new container for %s", imageName))
 			err = runDockerContainer(imageName, service.ServiceConfig.DockerRunArgs...)
 			if err != nil {
+				fmt.Printf("%+v\n", err)
 				ctx.String(http.StatusInternalServerError, "Fail to run Docker container for %s\n", imageName)
 				return
 			}
