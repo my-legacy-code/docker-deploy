@@ -5,6 +5,7 @@ import (
 	"github.com/gorilla/websocket"
 	"fmt"
 	"log"
+	"net/http"
 )
 
 type Client struct {
@@ -15,6 +16,9 @@ func newConnectionHandler(appState *AppState, errLogger *log.Logger) gin.Handler
 	wsUpgrader := websocket.Upgrader{
 		ReadBufferSize:  1024,
 		WriteBufferSize: 1024,
+		CheckOrigin: func(r *http.Request) bool {
+			return true
+		},
 	}
 
 	return func(ctx *gin.Context) {

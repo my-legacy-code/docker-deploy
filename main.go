@@ -15,7 +15,7 @@ func setupRouter(appState *AppState, errLogger *log.Logger) *gin.Engine {
 
 	router.Use(static.Serve("/", static.LocalFile("./public", true)))
 	apiRoutes := router.Group("/api")
-	apiRoutes.GET("/connections/:user_id", newConnectionHandler(appState, errLogger))
+	apiRoutes.GET("/connect", newConnectionHandler(appState, errLogger))
 	apiRoutes.POST("/deploy", deployHandler(appState, errLogger))
 	return router
 }
