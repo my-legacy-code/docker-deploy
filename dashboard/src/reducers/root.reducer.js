@@ -1,4 +1,4 @@
-import {ADD_SERVICES, UPDATE_SERVICE} from '../actions/service.action';
+import {INIT_SERVICES, UPDATE_SERVICE} from '../actions/service.action';
 
 const initialState = {
     services: []
@@ -10,7 +10,7 @@ const rootReducer = (state = initialState, action) => {
             console.log(action.payload);
             console.log({...state.services, [action.payload.repoName]: [action.payload.service]});
             return {...state, services: {...state.services, [action.payload.repoName]: action.payload.service}};
-        case ADD_SERVICES:
+        case INIT_SERVICES:
             return {...state, services: action.payload};
         default:
             return state;

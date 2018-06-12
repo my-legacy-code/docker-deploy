@@ -1,4 +1,4 @@
-import {addServices, updateService} from './actions/service.action';
+import {initServices, updateService} from './actions/service.action';
 
 const baseURL = `localhost:8000`;
 
@@ -14,11 +14,10 @@ export const initWebSoket = (store) => {
 
     ws.addEventListener('message', event => {
         let message = JSON.parse(event.data);
-        console.log(message);
 
         switch(message.type) {
             case INITIAL_SERVICE_STATES:
-                store.dispatch(addServices(message.body));
+                store.dispatch(initServices(message.body));
                 break;
             case UPDATE_SERVICE_STATE:
                 store.dispatch(updateService(message.body));
