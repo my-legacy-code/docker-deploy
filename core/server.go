@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"os"
@@ -14,14 +14,14 @@ func setupRouter(appState *AppState, errLogger *log.Logger) *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
-	router.Use(static.Serve("/", static.LocalFile("./public", true)))
+	router.Use(static.Serve("/", static.LocalFile("../public", true)))
 	apiRoutes := router.Group("/api")
 	apiRoutes.GET("/connect", newConnectionHandler(appState, errLogger))
 	apiRoutes.POST("/deploy", deployHandler(appState, errLogger))
 	return router
 }
 
-func monitorServiceStates(appState *AppState, errLogger *log.Logger)  {
+func monitorServiceStates(appState *AppState, errLogger *log.Logger) {
 	ticker := time.NewTicker(500 * time.Millisecond)
 	go func() {
 		for range ticker.C {
@@ -33,11 +33,11 @@ func monitorServiceStates(appState *AppState, errLogger *log.Logger)  {
 	}()
 }
 
-func main() {
+func LaunchServer(args []string) {
 	setupLogger()
 	errLogger := makeErrLogger()
 
-	configFilename := os.Args[1]
+	configFilename := args[1]
 	serviceConfig, err := loadConfig(configFilename)
 
 	if err != nil {

@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"log"
@@ -50,7 +50,7 @@ func initServiceState(configs configs) ServiceStates {
 
 const (
 	UpdateServiceStates WSMessageType = "update_service_states"
-	UpdateServiceState   WSMessageType = "update_service_state"
+	UpdateServiceState  WSMessageType = "update_service_state"
 )
 
 type WSMessageType string

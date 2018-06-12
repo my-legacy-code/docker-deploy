@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"os/exec"
@@ -80,7 +80,7 @@ func removeDockerContainers(imageName string) error {
 }
 
 func isContainerRunning(containerName string) (bool, error) {
-	cmd := exec.Command("docker", "inspect","-f", "'{{.State.Running}}'" ,containerName)
+	cmd := exec.Command("docker", "inspect", "-f", "'{{.State.Running}}'", containerName)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return false, errors.Wrapf(err, "inspect(%s) failed", containerName)
@@ -96,5 +96,5 @@ func isContainerRunning(containerName string) (bool, error) {
 		return false, errors.Wrapf(err, "inspect(%s) failed", containerName)
 	}
 
-	return  isRunning, nil
+	return isRunning, nil
 }

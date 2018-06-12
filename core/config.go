@@ -1,8 +1,11 @@
-package main
+package core
 
 import (
 	"time"
 	"io/ioutil"
+)
+
+import (
 	"github.com/pkg/errors"
 	"github.com/segmentio/objconv/json"
 )
