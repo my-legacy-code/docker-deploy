@@ -79,11 +79,11 @@ func removeDockerContainers(imageName string) error {
 	return nil
 }
 
-func isContainerRunning(imageName string) (bool, error) {
-	cmd := exec.Command("docker", "inspect","-f", "'{{.State.Running}}'" ,imageName)
+func isContainerRunning(containerName string) (bool, error) {
+	cmd := exec.Command("docker", "inspect","-f", "'{{.State.Running}}'" ,containerName)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return false, errors.Wrapf(err, "inspect(%s) failed", imageName)
+		return false, errors.Wrapf(err, "inspect(%s) failed", containerName)
 	}
 
 	outputStr := string(output)
@@ -93,7 +93,7 @@ func isContainerRunning(imageName string) (bool, error) {
 	isRunning, err := strconv.ParseBool(outputStr)
 
 	if err != nil {
-		return false, errors.Wrapf(err, "inspect(%s) failed", imageName)
+		return false, errors.Wrapf(err, "inspect(%s) failed", containerName)
 	}
 
 	return  isRunning, nil

@@ -20,11 +20,33 @@ type AppState struct {
 
 type ServiceStates map[string]*Service
 
-func initAppState(serviceConfig configs) *AppState {
+func initAppState(serviceConfig configs, errLogger *log.Logger) *AppState {
 	appState := new(AppState)
 	appState.ServiceStates = initServiceState(serviceConfig)
+
+	for imageName, serviceState := range appState.ServiceStates {
+		containerIds, err := getContainerIds(imageName)
+		if err != nil {
+			errLogger.Println(err)
+			continue
+		}
+		isRunning, err := isContainerRunning(containerIds[0])
+		if err != nil {
+			errLogger.Println(err)
+			continue
+		}
+		serviceState.Status = boolToStatus(isRunning)
+	}
+
 	appState.Clients = make(map[string]Client)
 	return appState
+}
+
+func boolToStatus(isRunning bool) Status {
+	if isRunning {
+		return Running
+	}
+	return Stopped
 }
 
 func initServiceState(configs configs) ServiceStates {

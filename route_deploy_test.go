@@ -18,7 +18,7 @@ func setupDeployRoute(t *testing.T) (*gin.Engine, *httptest.ResponseRecorder, Do
 
 	setupLogger()
 	errLogger := makeErrLogger()
-	appState := initAppState(serviceConfig)
+	appState := initAppState(serviceConfig, errLogger)
 	router := setupRouter(appState, errLogger)
 
 	recorder := httptest.NewRecorder()

@@ -41,3 +41,8 @@ func Test_initServiceState(t *testing.T) {
 		},
 		testServiceStatus)
 }
+
+func TestBoolToStatus(t *testing.T)  {
+	assert.Equal(t, Running, boolToStatus(true))
+	assert.Equal(t, Stopped, boolToStatus(false))
+}

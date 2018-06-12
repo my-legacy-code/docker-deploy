@@ -32,7 +32,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	appState := initAppState(serviceConfig)
+	appState := initAppState(serviceConfig, errLogger)
 	router := setupRouter(appState, errLogger)
 	router.Run(":" + getEnv("PORT", "3000"))
 }
