@@ -36,10 +36,39 @@ func Test_removeDockerContainers(t *testing.T) {
 	assert.Nil(t, runDockerContainer(imageName))
 	containerIds, err := getContainerIds(imageName)
 	assert.Nil(t, err)
-	assert.True(t, len(containerIds) > 2)
+	assert.True(t, len(containerIds) > 1)
 
 	assert.Nil(t, removeDockerContainers(imageName))
 	containerIds, err = getContainerIds(imageName)
 	assert.Nil(t, err)
 	assert.Nil(t, containerIds)
+}
+
+func TestCheckContainerStatus(t *testing.T) {
+	imageName := latestImageName("nginx")
+	assert.Nil(t, removeDockerContainers(imageName))
+
+	containerIds, err := getContainerIds(imageName)
+	assert.True(t, len(containerIds) == 0)
+
+	assert.Nil(t, runDockerContainer(imageName))
+	containerIds, err = getContainerIds(imageName)
+	assert.Nil(t, err)
+
+	assert.True(t, len(containerIds) == 1)
+
+	isRunning, err := isContainerRunning(containerIds[0])
+	assert.Nil(t, err)
+	assert.True(t, isRunning)
+
+	assert.Nil(t, stopDockerContainer(containerIds[0]))
+
+	isRunning, err = isContainerRunning(containerIds[0])
+	assert.Nil(t, err)
+	assert.False(t, isRunning)
+
+	containerIds, err = getContainerIds(imageName)
+	assert.Nil(t, err)
+
+	assert.True(t, len(containerIds) == 1)
 }
