@@ -42,7 +42,8 @@ func getContainerIds(imageName string) ([]string, error) {
 		return nil, nil
 	}
 
-	return strings.Split(string(output), "\n"), nil
+	containerIdStr = strings.TrimSpace(containerIdStr)
+	return strings.Split(containerIdStr, "\n"), nil
 }
 
 func removeDockerContainers(imageName string) error {
