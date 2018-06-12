@@ -1,6 +1,9 @@
 import {initServices, updateService} from './actions/service.action';
 
-const baseURL = `localhost:8000`;
+const hostname = window.location.hostname;
+const port = hostname === 'localhost' ? 8000 : window.location.port;
+
+const baseURL = `${hostname}:${port}`;
 
 const ws = new WebSocket(`ws://${baseURL}/api/connect`);
 
