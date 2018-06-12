@@ -4,8 +4,11 @@ import (
 	"github.com/spf13/cobra"
 	"fmt"
 	"os"
-	//"github.com/Teamyapp/docker-deploy/core"
+	"github.com/Teamyapp/docker-deploy/core"
 )
+
+var configFilename string
+var port string
 
 var rootCmd = &cobra.Command{
 	Use: "docker-deploy",
@@ -13,14 +16,13 @@ var rootCmd = &cobra.Command{
 	Long: `A Fast and Flexible Container Manager build with love by byliuyang and friends in Go.
 Complete documentation is available at https://github.com/Teamyapp/docker-deploy`,
 	Run: func(cmd *cobra.Command, args []string) {
-		//cmd.flag
-		//core.LaunchServer(args)
-		fmt.Println("Good")
+		core.LaunchServer(configFilename, port)
 	},
 }
 
 func init()  {
-	fmt.Println("Good")
+	rootCmd.PersistentFlags().StringVarP(&configFilename, "config", "c", "testdata/config_test.json", "config file")
+	rootCmd.PersistentFlags().StringVarP(&port, "port", "p", "3000", "port the server listen on")
 }
 
 func Execute()  {
