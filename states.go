@@ -30,6 +30,11 @@ func initAppState(serviceConfig configs, errLogger *log.Logger) *AppState {
 			errLogger.Println(err)
 			continue
 		}
+
+		if len(containerIds) < 1 {
+			continue
+		}
+
 		isRunning, err := isContainerRunning(containerIds[0])
 		if err != nil {
 			errLogger.Println(err)
