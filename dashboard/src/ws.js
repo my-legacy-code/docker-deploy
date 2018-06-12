@@ -1,4 +1,4 @@
-import {addServices} from './actions/service.action';
+import {addServices, updateService} from './actions/service.action';
 
 const baseURL = `localhost:8000`;
 
@@ -6,6 +6,7 @@ const ws = new WebSocket(`ws://${baseURL}/api/connect`);
 
 export const initWebSoket = (store) => {
     const INITIAL_SERVICE_STATES = 'initial_service_states';
+    const UPDATE_SERVICE_STATE = 'update_service_state';
 
     ws.addEventListener('open', () => {
         console.log('Connection established.');
@@ -18,6 +19,9 @@ export const initWebSoket = (store) => {
         switch(message.type) {
             case INITIAL_SERVICE_STATES:
                 store.dispatch(addServices(message.body));
+                break;
+            case UPDATE_SERVICE_STATE:
+                store.dispatch(updateService(message.body));
                 break;
         }
     });

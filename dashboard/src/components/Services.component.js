@@ -16,57 +16,57 @@ class ServicesComponent extends Component {
     }
 
     _renderServices() {
-        return this.state.services.map(service =>
-            <tr>
+        return Object.keys(this.state.services).map(serviceName =>
+            <tr key={serviceName}>
                 <td>
-                    {service.service_config.name}
+                    {this.state.services[serviceName].service_config.name}
                 </td>
                 <td>
-                    <div className={`status status-${service.status}`}>
+                    <div className={`status status-${this.state.services[serviceName].status}`}>
                     </div>
                 </td>
                 <td>
-                    {service.deployed_at}
+                    {this.state.services[serviceName].deployed_at}
                 </td>
                 <td>
-                    <a href={`https://hub.docker.com/r/${service.service_config.namespace}`} >
-                    {service.service_config.namespace}
-                        </a>
-                        /
-                        <a href={`https://hub.docker.com/r/${service.service_config.namespace}/${service.service_config.name}`}>
-                        {service.service_config.name}
-                        </a>
-                        </td>
-                        </tr>
-                        )
-                        }
+                    <a href={`https://hub.docker.com/r/${this.state.services[serviceName].service_config.namespace}`}>
+                        {this.state.services[serviceName].service_config.namespace}
+                    </a>
+                    /
+                    <a href={`https://hub.docker.com/r/${this.state.services[serviceName].service_config.namespace}/${this.state.services[serviceName].service_config.name}`}>
+                        {this.state.services[serviceName].service_config.name}
+                    </a>
+                </td>
+            </tr>
+        )
+    }
 
-                       render() {
-                    return (
-                    <div className="Services ui main container">
-                    <h1 className="ui header">Services</h1>
-                    <table className="ui very basic collapsing celled table">
+    render() {
+        return (
+            <div className="Services ui main container">
+                <h1 className="ui header">Services</h1>
+                <table className="ui very basic collapsing celled table">
                     <thead>
                     <tr>
-                    <th>
-                    Name
-                    </th>
-                    <th>
-                    Status
-                    </th>
-                    <th>
-                    Deployed At
-                    </th>
-                    <th>Repository</th>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th>
+                            Deployed At
+                        </th>
+                        <th>Repository</th>
                     </tr>
                     </thead>
                     <tbody>
                     {this._renderServices()}
                     </tbody>
-                    </table>
-                    </div>
-                    );
-                }
-                    }
+                </table>
+            </div>
+        );
+    }
+}
 
-                    export default ServicesComponent;
+export default ServicesComponent;

@@ -1,5 +1,7 @@
 .Services .status {
-    padding: 4px 10px;
+    text-align: center;
+    width: 100px;
+    padding: 4px 0;
     color: white;
     font-weight: bolder;
 }
