@@ -4,10 +4,10 @@ import (
 	"os"
 	"fmt"
 	"log"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/static"
-	"time"
 )
 
 func setupRouter(appState *AppState, errLogger *log.Logger) *gin.Engine {
