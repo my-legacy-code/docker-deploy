@@ -5,6 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"fmt"
 	"strings"
+	"strconv"
 )
 
 func latestImageName(repoName string) string {
@@ -25,6 +26,11 @@ func runDockerContainer(imageName string, runArgs ...string) error {
 
 	cmd := exec.Command("docker", args...)
 	return errors.Wrapf(cmd.Run(), "run(%s) failed", imageName)
+}
+
+func stopDockerContainer(containerName string) error {
+	cmd := exec.Command("docker", "stop", containerName)
+	return errors.Wrapf(cmd.Run(), "stop(%s) failed", containerName)
 }
 
 func getContainerIds(imageName string) ([]string, error) {
@@ -71,4 +77,24 @@ func removeDockerContainers(imageName string) error {
 		}
 	}
 	return nil
+}
+
+func isContainerRunning(imageName string) (bool, error) {
+	cmd := exec.Command("docker", "inspect","-f", "'{{.State.Running}}'" ,imageName)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		return false, errors.Wrapf(err, "inspect(%s) failed", imageName)
+	}
+
+	outputStr := string(output)
+	outputStr = strings.TrimSpace(outputStr)
+	outputStr = strings.Trim(outputStr, "'")
+
+	isRunning, err := strconv.ParseBool(outputStr)
+
+	if err != nil {
+		return false, errors.Wrapf(err, "inspect(%s) failed", imageName)
+	}
+
+	return  isRunning, nil
 }
