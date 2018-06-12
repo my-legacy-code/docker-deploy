@@ -2,13 +2,13 @@ import React, {Component} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
 import ServicesComponent from './components/Services.component';
-import {initWebSoket} from './ws';
+import {initWebSocket} from './ws';
 import store from './store';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        initWebSoket(store);
+        initWebSocket(store);
     }
 
     render() {

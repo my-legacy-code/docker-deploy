@@ -23,26 +23,7 @@ type ServiceStates map[string]*Service
 func initAppState(serviceConfig configs, errLogger *log.Logger) *AppState {
 	appState := new(AppState)
 	appState.ServiceStates = initServiceState(serviceConfig)
-
-	for imageName, serviceState := range appState.ServiceStates {
-		containerIds, err := getContainerIds(imageName)
-		if err != nil {
-			errLogger.Println(err)
-			continue
-		}
-
-		if len(containerIds) < 1 {
-			continue
-		}
-
-		isRunning, err := isContainerRunning(containerIds[0])
-		if err != nil {
-			errLogger.Println(err)
-			continue
-		}
-		serviceState.Status = boolToStatus(isRunning)
-	}
-
+	appState.ServiceStates = updateContainerStatus(appState.ServiceStates, errLogger)
 	appState.Clients = make(map[string]Client)
 	return appState
 }
@@ -68,7 +49,7 @@ func initServiceState(configs configs) ServiceStates {
 }
 
 const (
-	InitialServiceStates WSMessageType = "initial_service_states"
+	UpdateServiceStates WSMessageType = "update_service_states"
 	UpdateServiceState   WSMessageType = "update_service_state"
 )
 
@@ -79,15 +60,35 @@ type WSMessage struct {
 	Body interface{}   `json:"body"`
 }
 
-func sendInitialServiceStates(username string, appState *AppState) {
+func pushServiceStates(userId string, appState *AppState) {
 	message := WSMessage{
-		Type: InitialServiceStates,
+		Type: UpdateServiceStates,
 		Body: appState.ServiceStates,
 	}
-	appState.Clients[username].Conn.WriteJSON(message)
+	appState.Clients[userId].Conn.WriteJSON(message)
 }
 
-func updateServiceState(service *Service, appState *AppState) {
+func updateContainerStatus(serviceStates ServiceStates, errLogger *log.Logger) ServiceStates {
+	for imageName, serviceState := range serviceStates {
+		containerIds, err := getContainerIds(imageName)
+		if err != nil {
+			errLogger.Println(err)
+			continue
+		}
+		if len(containerIds) < 1 {
+			continue
+		}
+		isRunning, err := isContainerRunning(containerIds[0])
+		if err != nil {
+			errLogger.Println(err)
+			continue
+		}
+		serviceState.Status = boolToStatus(isRunning)
+	}
+	return serviceStates
+}
+
+func pushServiceState(service *Service, appState *AppState) {
 	message := WSMessage{
 		Type: UpdateServiceState,
 		Body: service,

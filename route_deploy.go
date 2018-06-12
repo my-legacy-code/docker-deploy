@@ -31,7 +31,7 @@ func deployHandler(appState *AppState, errLogger *log.Logger) gin.HandlerFunc {
 		if service, ok := appState.ServiceStates[payload.Repository.RepoName]; ok {
 			log.Printf("Start deploying %v", payload.Repository.RepoName)
 			service.Status = Deploying
-			updateServiceState(service, appState)
+			pushServiceState(service, appState)
 
 			log.Printf("Pulling %v:latest from Docker Hub", payload.Repository.RepoName)
 
@@ -61,7 +61,7 @@ func deployHandler(appState *AppState, errLogger *log.Logger) gin.HandlerFunc {
 
 			service.DeployedAt = time.Now()
 			service.Status = Running
-			updateServiceState(service, appState)
+			pushServiceState(service, appState)
 			log.Printf("Container for %s is now up and running", imageName)
 
 			ctx.Writer.WriteHeader(http.StatusNoContent)

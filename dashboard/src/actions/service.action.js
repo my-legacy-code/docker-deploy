@@ -1,5 +1,5 @@
 export const UPDATE_SERVICE = 'UPDATE_SERVICE';
-export const INIT_SERVICES = 'INIT_SERVICES';
+export const UPDATE_SERVICES = 'UPDATE_SERVICES';
 
 export const updateService = (service) => ({
     type: UPDATE_SERVICE,
@@ -9,8 +9,8 @@ export const updateService = (service) => ({
     }
 });
 
-export const initServices = (services) => {
+export const updateServices = (services) => {
    return ({
-    type: INIT_SERVICES,
+    type: UPDATE_SERVICES,
     payload: services
 })};

@@ -7,6 +7,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/static"
+	"time"
 )
 
 func setupRouter(appState *AppState, errLogger *log.Logger) *gin.Engine {
@@ -18,6 +19,18 @@ func setupRouter(appState *AppState, errLogger *log.Logger) *gin.Engine {
 	apiRoutes.GET("/connect", newConnectionHandler(appState, errLogger))
 	apiRoutes.POST("/deploy", deployHandler(appState, errLogger))
 	return router
+}
+
+func monitorServiceStates(appState *AppState, errLogger *log.Logger)  {
+	ticker := time.NewTicker(500 * time.Millisecond)
+	go func() {
+		for range ticker.C {
+			appState.ServiceStates = updateContainerStatus(appState.ServiceStates, errLogger)
+			for userId := range appState.Clients {
+				pushServiceStates(userId, appState)
+			}
+		}
+	}()
 }
 
 func main() {
@@ -34,5 +47,8 @@ func main() {
 
 	appState := initAppState(serviceConfig, errLogger)
 	router := setupRouter(appState, errLogger)
+	monitorServiceStates(appState, errLogger)
+
 	router.Run(":" + getEnv("PORT", "3000"))
+
 }

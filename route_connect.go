@@ -36,6 +36,6 @@ func newConnectionHandler(appState *AppState, errLogger *log.Logger) gin.Handler
 		}
 		appState.Clients[userId] = client
 
-		sendInitialServiceStates(userId, appState)
+		pushServiceStates(userId, appState)
 	}
 }
