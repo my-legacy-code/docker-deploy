@@ -29,11 +29,13 @@ class ServicesComponent extends Component {
                     {this.state.services[serviceName].deployed_at}
                 </td>
                 <td>
-                    <a href={`https://hub.docker.com/r/${this.state.services[serviceName].service_config.namespace}`}>
+                    <a href={`https://hub.docker.com/r/${this.state.services[serviceName].service_config.namespace}`}
+                       target={'blank'}>
                         {this.state.services[serviceName].service_config.namespace}
                     </a>
                     /
-                    <a href={`https://hub.docker.com/r/${this.state.services[serviceName].service_config.namespace}/${this.state.services[serviceName].service_config.name}`}>
+                    <a href={`https://hub.docker.com/r/${this.state.services[serviceName].service_config.namespace}/${this.state.services[serviceName].service_config.name}`}
+                       target={'blank'}>
                         {this.state.services[serviceName].service_config.name}
                     </a>
                 </td>
