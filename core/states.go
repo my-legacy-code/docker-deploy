@@ -15,7 +15,7 @@ type Status string
 
 type AppState struct {
 	ServiceStates ServiceStates
-	Clients       map[string]Client
+	Clients       []Client
 }
 
 type ServiceStates map[string]*Service
@@ -24,7 +24,6 @@ func initAppState(serviceConfig configs, errLogger *log.Logger) *AppState {
 	appState := new(AppState)
 	appState.ServiceStates = initServiceState(serviceConfig)
 	appState.ServiceStates = updateContainerStatus(appState.ServiceStates, errLogger)
-	appState.Clients = make(map[string]Client)
 	return appState
 }
 
@@ -60,12 +59,14 @@ type WSMessage struct {
 	Body interface{}   `json:"body"`
 }
 
-func pushServiceStates(userId string, appState *AppState) {
+func pushServiceStates(appState *AppState) {
 	message := WSMessage{
 		Type: UpdateServiceStates,
 		Body: appState.ServiceStates,
 	}
-	appState.Clients[userId].Conn.WriteJSON(message)
+	for _, client := range appState.Clients {
+		client.Conn.WriteJSON(message)
+	}
 }
 
 func updateContainerStatus(serviceStates ServiceStates, errLogger *log.Logger) ServiceStates {

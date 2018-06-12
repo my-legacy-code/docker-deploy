@@ -34,8 +34,7 @@ func newConnectionHandler(appState *AppState, errLogger *log.Logger) gin.Handler
 		client := Client{
 			Conn: conn,
 		}
-		appState.Clients[userId] = client
-
-		pushServiceStates(userId, appState)
+		appState.Clients = append(appState.Clients, client)
+		pushServiceStates(appState)
 	}
 }
