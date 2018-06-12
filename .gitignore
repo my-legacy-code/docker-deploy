@@ -23,3 +23,6 @@ docker-deploy
 
 # Error logs
 *.err
+
+# Web dashboard
+public
