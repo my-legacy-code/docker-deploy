@@ -10,9 +10,8 @@ import (
 var rootCmd = &cobra.Command{
 	Use: "docker-deploy",
 	Short: "Docker Deploy is a easy to use container manager",
-	Long: `A Fast and Flexible Container Manager build with
-				love by byliuyang and friends in Go.
-				Complete documentation is available at https://github.com/Teamyapp/docker-deploy`,
+	Long: `A Fast and Flexible Container Manager build with love by byliuyang and friends in Go.
+Complete documentation is available at https://github.com/Teamyapp/docker-deploy`,
 	Run: func(cmd *cobra.Command, args []string) {
 		//cmd.flag
 		//core.LaunchServer(args)
