@@ -3,11 +3,12 @@ import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
 import ServicesComponent from './components/Services.component';
 import {initWebSoket} from './ws';
+import store from './store';
 
 class App extends Component {
     constructor(props) {
         super(props);
-        initWebSoket();
+        initWebSoket(store);
     }
 
     render() {
@@ -20,7 +21,7 @@ class App extends Component {
                         </div>
                     </nav>
                     <Switch>
-                        <Route exact path='/' component={ServicesComponent}/>
+                        <Route exact path='/' render={(props) => <ServicesComponent />}/>
                     </Switch>
                 </div>
             </Router>

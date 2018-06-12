@@ -1,0 +1,41 @@
+.Services .status {
+    padding: 4px 10px;
+    color: white;
+    font-weight: bolder;
+}
+
+.Services .status-initialized{
+    background-color: #607D8B;
+}
+
+.Services .status-initialized:after {
+    content: 'Initialized';
+
+}
+
+.Services .status-running {
+    background-color: #4CAF50;
+}
+
+.Services .status-running:after {
+    content: 'Running';
+
+}
+
+.Services .status-deploying {
+    background-color: #03A9F4;
+}
+
+.Services .status-deploying:after {
+    content: 'Deploying';
+
+}
+
+.Services .status-stopped {
+    background-color: #616161;
+}
+
+.Services .status-stopped:after {
+    content: 'Stopped';
+
+}
