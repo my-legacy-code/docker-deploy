@@ -30,7 +30,7 @@ go get github.com/Teamyapp/docker-deploy
 2. Navigate to the root folder of this repo, and run:
 
 ```
-docker-deploy init /Users/harryliu/Desktop/Screen Shot 2018-06-12 at 1.18.56 PM.png
+docker-deploy init
 ```
 
 to automically build and configure web dashboard.
